@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Доп. задания №3</title>
+    <style>
+        :root { --bg: #f8fafc; --card: #fff; --primary: #3b82f6; --text: #0f172a; --danger: #ef4444; }
+        body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .nav { margin-bottom: 24px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+        .nav a { text-decoration: none; color: var(--primary); padding: 8px 14px; background: var(--card); border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); font-weight: 500; }
+        .nav a:hover { background: var(--primary); color: #fff; }
+        section { background: var(--card); padding: 24px; border-radius: 12px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        h2 { margin-top: 0; color: var(--primary); border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
+        input, select { padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 1rem; width: 100%; box-sizing: border-box; margin-bottom: 8px; }
+        button { padding: 10px 16px; background: var(--primary); color: #fff; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; transition: 0.2s; }
+        button:hover { opacity: 0.9; }
+        
+        /* Калькулятор */
+        .calc-box { display: flex; flex-direction: column; gap: 10px; }
+        .calc-row { display: flex; gap: 8px; align-items: center; }
+        .calc-keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .calc-keypad button { background: #e2e8f0; color: #0f172a; font-size: 1.1rem; padding: 12px; }
+        .calc-keypad button:hover { background: #cbd5e1; }
+        #calc-result { background: #f1f5f9; font-weight: bold; font-size: 1.2rem; text-align: center; }
+        .calc-result-red { background: var(--danger) !important; color: #fff; }
+
+        /* Индикатор */
+        .range-box { padding: 15px; border-radius: 8px; background: #f1f5f9; transition: background 0.3s; }
+        #indicator { width: 100%; height: 20px; cursor: pointer; }
+        .range-controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+        .range-key { flex: 1 0 30%; background: #e2e8f0; color: #0f172a; font-size: 1rem; padding: 10px; border-radius: 6px; border: none; cursor: pointer; }
+        .range-val { font-weight: bold; margin-left: 10px; }
+
+        /* Генератор титульника */
+        .title-form { display: flex; flex-direction: column; gap: 10px; }
+        .title-form button { width: 100%; padding: 14px; font-size: 1.1rem; margin-top: 8px; }
+
+        @media (max-width: 600px) {
+            .calc-row { flex-direction: column; align-items: stretch; }
+            .nav { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="nav">
+            <a href="index.html">← Вернуться к лабораторной</a>
+            <a href="resume.html" target="_blank">📄 Резюме</a>
+        </nav>
+
+        <!-- 1. КАЛЬКУЛЯТОР -->
+        <section>
+            <h2>1. Калькулятор (+, -, *, /)</h2>
+            <div class="calc-box">
+                <div class="calc-row">
+                    <input type="text" id="calc-n1" placeholder="Число 1" readonly onclick="setCalcTarget(this)">
+                    <select id="calc-op"><option>+</option><option>-</option><option>*</option><option>/</option></select>
+                    <input type="text" id="calc-n2" placeholder="Число 2" readonly onclick="setCalcTarget(this)">
+                </div>
+                <div class="calc-keypad">
+                    <button onclick="calcInput(7)">7</button><button onclick="calcInput(8)">8</button><button onclick="calcInput(9)">9</button>
+                    <button onclick="calcInput(4)">4</button><button onclick="calcInput(5)">5</button><button onclick="calcInput(6)">6</button>
+                    <button onclick="calcInput(1)">1</button><button onclick="calcInput(2)">2</button><button onclick="calcInput(3)">3</button>
+                    <button onclick="calcInput(0)">0</button><button onclick="calcClear()">C</button><button onclick="calcDel()">⌫</button>
+                </div>
+                <button onclick="calcResult()" style="background:#10b981">Посчитать</button>
+                <input type="text" id="calc-result" placeholder="Ответ" readonly>
+            </div>
+        </section>
+
+        <!-- 2. СТРЕЛОЧНЫЙ ИНДИКАТОР -->
+        <section>
+            <h2>2. Горизонтальный индикатор (10 делений)</h2>
+            <div class="range-box" id="range-box">
+                <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+                    <span>0</span><span>5</span><span>10</span>
+                </div>
+                <input type="range" id="indicator" min="0" max="10" step="1" value="0">
+                <div style="text-align:center;margin-top:4px">Значение: <span id="range-val" class="range-val">0</span></div>
+            </div>
+            <div class="range-controls" id="range-keypad">
+                <button class="range-key" onclick="rangeInput(7)">7</button>
+                <button class="range-key" onclick="rangeInput(8)">8</button>
+                <button class="range-key" onclick="rangeInput(9)">9</button>
+                <button class="range-key" onclick="rangeInput(4)">4</button>
+                <button class="range-key" onclick="rangeInput(5)">5</button>
+                <button class="range-key" onclick="rangeInput(6)">6</button>
+                <button class="range-key" onclick="rangeInput(1)">1</button>
+                <button class="range-key" onclick="rangeInput(2)">2</button>
+                <button class="range-key" onclick="rangeInput(3)">3</button>
+                <button class="range-key" onclick="rangeInput(0)">0</button>
+                <button class="range-key" onclick="rangeClear()">C</button>
+                <button class="range-key" onclick="rangeDel()">⌫</button>
+            </div>
+            <button onclick="applyRange()" style="margin-top:12px;background:#8b5cf6">Применить число к индикатору</button>
+        </section>
+
+        <!-- 3. ГЕНЕРАТОР ТИТУЛЬНОГО ЛИСТА -->
+        <section>
+            <h2>3. Генератор титульного листа</h2>
+            <form class="title-form" onsubmit="event.preventDefault(); generateTitle();">
+                <input type="text" id="t-dept" placeholder="Кафедра" required>
+                <input type="text" id="t-group" placeholder="Группа" required>
+                <input type="text" id="t-teacher" placeholder="ФИО преподавателя" required>
+                <input type="text" id="t-student" placeholder="ФИО студента" required>
+                <button type="submit">📄 Сгенерировать и открыть титульный лист</button>
+            </form>
+        </section>
+    </div>
+
+    <script>
+        /* ================= 1. ЛОГИКА КАЛЬКУЛЯТОРА ================= */
+        let calcTarget = document.getElementById('calc-n1');
+        function setCalcTarget(el) { calcTarget = el; el.style.borderColor = '#3b82f6'; }
+        document.getElementById('calc-n2').onfocus = () => setCalcTarget(document.getElementById('calc-n2'));
+        
+        function calcInput(n) { calcTarget.value += n; }
+        function calcClear() { calcTarget.value = ''; }
+        function calcDel() { calcTarget.value = calcTarget.value.slice(0, -1); }
+        
+        function calcResult() {
+            const n1 = parseFloat(document.getElementById('calc-n1').value) || 0;
+            const n2 = parseFloat(document.getElementById('calc-n2').value) || 0;
+            const op = document.getElementById('calc-op').value;
+            let res;
+            switch(op) {
+                case '+': res = n1 + n2; break;
+                case '-': res = n1 - n2; break;
+                case '*': res = n1 * n2; break;
+                case '/': res = n2 !== 0 ? n1 / n2 : 'Ошибка: деление на 0'; break;
+            }
+            const out = document.getElementById('calc-result');
+            out.classList.remove('calc-result-red');
+            if (typeof res === 'number' && res > 15) {
+                out.value = 'число>15';
+                out.classList.add('calc-result-red');
+            } else {
+                out.value = res;
+            }
+        }
+
+        /* ================= 2. ЛОГИКА ИНДИКАТОРА ================= */
+        let rangeBuffer = '';
+        function rangeInput(n) { rangeBuffer += n; updateRangeDisplay(); }
+        function rangeClear() { rangeBuffer = ''; updateRangeDisplay(); }
+        function rangeDel() { rangeBuffer = rangeBuffer.slice(0, -1); updateRangeDisplay(); }
+        function updateRangeDisplay() { document.getElementById('range-val').textContent = rangeBuffer || '0'; }
+
+        function applyRange() {
+            let val = parseInt(rangeBuffer) || 0;
+            if (val > 10) val = 10;
+            if (val < 0) val = 0;
+            document.getElementById('indicator').value = val;
+            document.getElementById('range-val').textContent = val;
+            
+            // Меняем цвет если > 5
+            const box = document.getElementById('range-box');
+            if (val > 5) box.style.background = '#fee2e2';
+            else box.style.background = '#f1f5f9';
+            
+            rangeBuffer = '';
+        }
+
+        /* ================= 3. ГЕНЕРАТОР ТИТУЛЬНОГО ЛИСТА ================= */
+        function generateTitle() {
+            const dept = document.getElementById('t-dept').value;
+            const group = document.getElementById('t-group').value;
+            const teacher = document.getElementById('t-teacher').value;
+            const student = document.getElementById('t-student').value;
+            const year = new Date().getFullYear();
+
+            // Формируем HTML титульного листа по стандарту
+            const titleHTML = `<!DOCTYPE html>
+<html lang="ru"><head><meta charset="UTF-8"><style>
+body{font-family:"Times New Roman",serif;margin:40px;line-height:1.5;text-align:center}
+.header{margin-bottom:20px;font-size:14px}
+.title{font-size:24px;font-weight:bold;margin:40px 0}
+.subtitle{font-size:20px;margin-bottom:30px}
+.info{text-align:right;margin-top:50px;font-size:16px;line-height:2}
+.footer{margin-top:100px;font-size:14px}
+</style></head><body>
+<div class="header">МИНИСТЕРСТВО НАУКИ И ВЫСШЕГО ОБРАЗОВАНИЯ РФ<br>ФГАОУ ВО «Университет»<br>Кафедра: <b>${dept}</b></div>
+<div class="title">ОТЧЕТ</div>
+<div class="subtitle">по лабораторной работе №3<br>«Основы HTML, CSS и JavaScript»</div>
+<div class="info">
+Выполнил: студент гр. ${group}<br>${student}<br>
+Проверил: преподаватель<br>${teacher}
+</div>
+<div class="footer">Город — ${year} г.</div></body></html>`;
+
+            // Создаем Blob и открываем в новой вкладке (имитация редиректа на сгенерированную страницу)
+            const blob = new Blob([titleHTML], {type: 'text/html'});
+            window.open(URL.createObjectURL(blob), '_blank');
+        }
+    </script>
+</body>
+</html>
