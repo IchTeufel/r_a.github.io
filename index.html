@@ -3,95 +3,536 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Лабараторная №3</title>
+    <title>Лабораторная №3 | Резюме | Доп. задания</title>
     <style>
-        :root { --primary: #3b82f6; --bg: #f8fafc; --card: #fff; --text: #0f172a; }
-        body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; margin: 0; padding: 20px; transition: background 0.5s ease; }
-        .container { max-width: 800px; margin: 0 auto; }
-        .nav { margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-        .nav a { color: var(--primary); text-decoration: none; font-weight: 600; padding: 8px 16px; background: var(--card); border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); transition: 0.2s; }
-        .nav a:hover { background: var(--primary); color: #fff; }
-        section { background: var(--card); padding: 24px; border-radius: 12px; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        h1 { font-size: 2rem; margin-bottom: 16px; }
-        h3 { margin-bottom: 16px; color: var(--primary); }
-        label { display: block; margin-bottom: 8px; font-weight: 500; }
-        input[type="text"], input[type="number"] { padding: 10px; margin-bottom: 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; width: 100%; max-width: 300px; }
-        button { padding: 10px 20px; margin: 4px; border: none; border-radius: 6px; background: var(--primary); color: #fff; cursor: pointer; font-weight: 500; transition: opacity 0.2s; }
-        button:hover { opacity: 0.9; }
-        #profilePhoto { border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); object-fit: cover; }
-        #surnameTarget { font-weight: bold; color: var(--primary); }
-        .result-text { margin-top: 12px; font-weight: 600; }
+        /* =========================================
+           1. ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ И БАЗА
+           ========================================= */
+        :root {
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --text-main: #0f172a;
+            --text-sec: #64748b;
+            --border: #e2e8f0;
+            --danger: #ef4444;
+            --success: #10b981;
+            --radius: 12px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            --font: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font);
+            background: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            transition: background 0.5s ease;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 0 20px 60px; }
+
+        /* =========================================
+           2. НАВИГАЦИЯ (ВКЛАДКИ)
+           ========================================= */
+        .main-nav {
+            background: var(--bg-card);
+            padding: 16px 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--text-sec);
+            padding: 10px 18px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+        .nav-btn:hover { border-color: var(--primary); color: var(--primary); }
+        .nav-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+
+        /* =========================================
+           3. СТРАНИЦЫ И АНИМАЦИИ
+           ========================================= */
+        .page { display: none; padding-top: 24px; }
+        .page.active { display: block; animation: fadeIn 0.4s ease-out; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .fade-in {
+            opacity: 0; transform: translateY(25px); transition: all 0.6s ease-out;
+        }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+        h1, h2, h3 { line-height: 1.2; font-weight: 700; margin-bottom: 16px; }
+        h2 { font-size: 1.8rem; position: relative; display: inline-block; padding-bottom: 8px; }
+        h2::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 40px; height: 4px;
+            background: var(--primary); border-radius: 2px;
+        }
+
+        /* Общие карточки */
+        .card {
+            background: var(--bg-card);
+            padding: 24px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        input, select, textarea {
+            width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 8px;
+            font-size: 1rem; font-family: inherit; transition: border-color 0.2s; margin-bottom: 12px;
+        }
+        input:focus, select:focus, textarea:focus { border-color: var(--primary); outline: none; }
+        textarea { resize: vertical; min-height: 100px; }
+
+        button.btn {
+            background: var(--primary); color: #fff; border: none; padding: 12px 20px;
+            border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s;
+        }
+        button.btn:hover { background: var(--primary-hover); transform: translateY(-2px); }
+        button.btn-secondary { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+        button.btn-secondary:hover { background: var(--primary); color: #fff; }
+
+        /* =========================================
+           4. СТИЛИ ЛАБОРАТОРНОЙ
+           ========================================= */
+        .hero-lab { text-align: center; margin-bottom: 30px; }
+        .hero-lab h1 { font-size: 2.2rem; }
+        #profilePhoto { border-radius: 12px; margin-bottom: 20px; box-shadow: var(--shadow); object-fit: cover; }
+        .lab-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
+        .lab-row input { flex: 1; min-width: 120px; margin-bottom: 0; }
+        .lab-row button { flex-shrink: 0; }
+        #numberResult { margin-top: 12px; font-weight: 600; min-height: 24px; }
+
+        /* =========================================
+           5. СТИЛИ РЕЗЮМЕ
+           ========================================= */
+        .resume-hero { text-align: center; padding: 20px 0 40px; }
+        .resume-hero p.sub { color: var(--text-sec); font-size: 1.1rem; margin-bottom: 16px; }
+        .resume-hero .desc { max-width: 650px; margin: 0 auto 24px; color: var(--text-sec); }
+        .btn-group { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
+
+        .timeline { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+        .job-card { border-left: 4px solid var(--primary); }
+        .job-header { display: flex; justify-content: space-between; flex-wrap: wrap; margin-bottom: 6px; }
+        .job-dates { color: var(--text-sec); font-size: 0.9rem; }
+
+        .edu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 16px; }
+        .edu-card { border-top: 3px solid var(--primary); }
+        .edu-year { color: var(--text-sec); font-size: 0.85rem; margin-bottom: 6px; }
+
+        .skills-wrap { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+        .skill { background: #e0e7ff; color: #1e40af; padding: 6px 14px; border-radius: 50px; font-size: 0.9rem; font-weight: 500; }
+
+        .form-status { margin-top: 12px; padding: 12px; border-radius: 8px; display: none; background: #d1fae5; color: #065f46; }
+        .error-msg { color: var(--danger); font-size: 0.85rem; margin-top: 4px; display: none; }
+        .form-group.error input, .form-group.error textarea { border-color: var(--danger); }
+        .form-group.error .error-msg { display: block; }
+
+        /* =========================================
+           6. СТИЛИ ДОП. ЗАДАНИЙ
+           ========================================= */
+        .calc-box { display: flex; flex-direction: column; gap: 10px; }
+        .calc-row { display: flex; gap: 8px; flex-wrap: wrap; }
+        .calc-row input, .calc-row select { margin-bottom: 0; flex: 1; }
+        .calc-row input { text-align: center; font-weight: bold; }
+        .calc-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .calc-pad button { background: #f1f5f9; color: var(--text-main); font-size: 1.1rem; padding: 14px; border-radius: 6px; border: none; cursor: pointer; transition: 0.2s; }
+        .calc-pad button:hover { background: #e2e8f0; }
+        #calc-result { text-align: center; font-size: 1.2rem; background: #f8fafc; }
+        #calc-result.red-bg { background: var(--danger) !important; color: #fff; }
+
+        .range-box { padding: 20px; background: #f1f5f9; border-radius: 8px; transition: background 0.3s; }
+        #indicator { width: 100%; height: 16px; cursor: pointer; }
+        .range-labels { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-sec); }
+        .range-val { font-weight: bold; margin-left: 8px; }
+        .range-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
+        .range-pad button { background: #e2e8f0; color: var(--text-main); padding: 10px; border-radius: 6px; border: none; cursor: pointer; }
+
+        /* =========================================
+           7. ФУТЕР И АДАПТИВНОСТЬ
+           ========================================= */
+        footer { text-align: center; padding: 30px 0 60px; color: var(--text-sec); border-top: 1px solid var(--border); margin-top: 40px; }
+
+        @media (max-width: 768px) {
+            .nav-btn { flex: 1; text-align: center; min-width: 120px; }
+            .calc-row, .lab-row { flex-direction: column; }
+            .calc-row input, .calc-row select { width: 100%; }
+            .main-nav { padding: 12px 10px; gap: 8px; }
+            h2 { font-size: 1.5rem; }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <nav class="nav">
-            <span>🏠 Лабораторная №3</span>
-            <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <a href="resume.html" target="_blank">📄 Резюме</a>
-                <a href="lab3_extra.html" target="_blank">🛠️ Доп. задания</a>
+
+    <!-- Навигация по вкладкам -->
+    <nav class="main-nav">
+        <button class="nav-btn active" onclick="showPage('lab')">🏠 Лабораторная</button>
+        <button class="nav-btn" onclick="showPage('resume')">📄 Резюме</button>
+        <button class="nav-btn" onclick="showPage('extra')">🛠️ Доп. задания</button>
+    </nav>
+
+    <main class="container">
+        <!-- ================= СТРАНИЦА 1: ЛАБОРАТОРНАЯ ================= -->
+        <section id="lab" class="page active">
+            <div class="hero-lab">
+                <h1>Аглитдинов Ростислав</h1>
+                <img id="profilePhoto" src="https://picsum.photos/150" alt="Фото профиля">
             </div>
-        </nav>
 
-        <h1>Аглитдинов Ростислав</h1>
-        <img id="profilePhoto" src="https://picsum.photos/150" alt="Фото">
+            <div class="card">
+                <h3>Работа с числами</h3>
+                <div class="lab-row">
+                    <input type="number" id="num1" placeholder="Число 1">
+                    <input type="number" id="num2" placeholder="Число 2">
+                </div>
+                <button class="btn" onclick="showResult('min')">Найти минимум</button>
+                <button class="btn" onclick="showResult('max')">Найти максимум</button>
+                <button class="btn" onclick="showResult('eq')">Проверить равенство</button>
+                <p id="numberResult"></p>
+            </div>
 
-        <section>
-            <h3>Работа с числами</h3>
-            <label>Число 1: <input type="number" id="num1"></label>
-            <label>Число 2: <input type="number" id="num2"></label>
-            <button onclick="showResult('min')">Минимум</button>
-            <button onclick="showResult('max')">Максимум</button>
-            <button onclick="showResult('eq')">Равенство</button>
-            <p id="numberResult" class="result-text"></p>
+            <div class="card">
+                <h3>Админ</h3>
+                <button class="btn btn-secondary" onclick="alert('Имя пользователя: admin')">Показать имя admin</button>
+            </div>
+
+            <div class="card">
+                <h3>Подтвердите возраст</h3>
+                <button class="btn btn-secondary" onclick="promptAge()">Указать возраст</button>
+            </div>
+
+            <div class="card">
+                <h3>Изменить текст фамилии</h3>
+                <p>Текущая фамилия: <span id="surnameTarget" style="color:var(--primary); font-weight:bold">Аглитдинов</span></p>
+                <input type="text" id="newSurname" placeholder="Новая фамилия">
+                <button class="btn" onclick="changeSurname()">Изменить фамилию</button>
+            </div>
+
+            <div class="card">
+                <h3>Изменить цвет фона</h3>
+                <button class="btn" onclick="changeBg()">🎨 Сменить фон</button>
+            </div>
+
+            <div class="card">
+                <h3>Анкета</h3>
+                <form onsubmit="event.preventDefault(); alert('Анкета успешно отправлена!'); this.reset();">
+                    <input type="text" placeholder="ФИО" required>
+                    <input type="number" placeholder="Возраст" required>
+                    <div style="margin-bottom:12px">
+                        <label style="margin-right:16px"><input type="radio" name="gender" value="М"> М</label>
+                        <label><input type="radio" name="gender" value="Ж"> Ж</label>
+                    </div>
+                    <label style="display:flex; align-items:center; gap:8px; margin-bottom:12px">
+                        <input type="checkbox" style="width:auto; margin:0" required> Я согласен с условиями
+                    </label>
+                    <button type="submit" class="btn" style="width:100%">Отправить анкету</button>
+                </form>
+            </div>
         </section>
 
-        <section>
-            <h3>Админ</h3>
-            <button onclick="alert('Имя пользователя: admin')">Показать имя admin</button>
+        <!-- ================= СТРАНИЦА 2: РЕЗЮМЕ ================= -->
+        <section id="resume" class="page">
+            <div class="resume-hero fade-in">
+                <h1>Аглитдинов Ростислав</h1>
+                <p class="sub">Frontend-разработчик / Студент</p>
+                <p class="desc">Начинающий веб-разработчик, увлечённый созданием отзывчивых, быстрых и эстетичных интерфейсов. Активно изучаю современные стандарты HTML, CSS и JavaScript.</p>
+                <div class="btn-group">
+                    <button class="btn" onclick="alert('Скачивание PDF...')">📄 Скачать резюме</button>
+                    <button class="btn btn-secondary" onclick="scrollToContact()">✉️ Связаться со мной</button>
+                </div>
+            </div>
+
+            <div class="fade-in">
+                <h2>Опыт работы</h2>
+                <div class="timeline">
+                    <div class="card job-card">
+                        <div class="job-header">
+                            <strong>Junior Frontend Developer</strong>
+                            <span class="job-dates">Янв 2024 — Наст. время</span>
+                        </div>
+                        <p>TechStudio. Разработка клиентской части веб-приложений, верстка макетов по Figma, интеграция с REST API, исправление багов.</p>
+                    </div>
+                    <div class="card job-card">
+                        <div class="job-header">
+                            <strong>Стажер-разработчик</strong>
+                            <span class="job-dates">Июн 2023 — Дек 2023</span>
+                        </div>
+                        <p>WebAgency. Создание лендингов, работа с Git, семантическая верстка, тестирование кроссбраузерности.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fade-in" style="margin-top: 30px;">
+                <h2>Образование</h2>
+                <div class="edu-grid">
+                    <div class="card edu-card">
+                        <div class="edu-year">2022 — 2026</div>
+                        <h3>Бакалавриат, Информатика и ВТ</h3>
+                        <p>Университет ИТМО / МГТУ им. Баумана</p>
+                    </div>
+                    <div class="card edu-card">
+                        <div class="edu-year">2023</div>
+                        <h3>Курс "Fullstack JavaScript"</h3>
+                        <p>Яндекс Практикум / Stepik</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fade-in" style="margin-top: 30px;">
+                <h2>Навыки</h2>
+                <div class="skills-wrap">
+                    <span class="skill">HTML5</span>
+                    <span class="skill">CSS3 / Flexbox / Grid</span>
+                    <span class="skill">JavaScript (ES6+)</span>
+                    <span class="skill">Git & GitHub</span>
+                    <span class="skill">Адаптивная верстка</span>
+                    <span class="skill">Командная работа</span>
+                    <span class="skill">Управление временем</span>
+                </div>
+            </div>
+
+            <div id="contact" class="fade-in" style="margin-top: 30px;">
+                <h2>Напишите мне</h2>
+                <form id="contactForm" class="card" novalidate>
+                    <div class="form-group">
+                        <input type="text" id="name" placeholder="Ваше имя" required>
+                        <div class="error-msg">Введите ваше имя.</div>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" placeholder="Email" required>
+                        <div class="error-msg">Введите корректный email.</div>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="message" placeholder="Сообщение" required></textarea>
+                        <div class="error-msg">Сообщение не может быть пустым.</div>
+                    </div>
+                    <button type="submit" class="btn" style="width:100%">Отправить</button>
+                    <div id="formStatus" class="form-status">✅ Сообщение успешно отправлено!</div>
+                </form>
+            </div>
         </section>
 
-        <section>
-            <h3>Подтвердите возраст</h3>
-            <button onclick="promptAge()">Указать возраст</button>
-        </section>
+        <!-- ================= СТРАНИЦА 3: ДОП. ЗАДАНИЯ ================= -->
+        <section id="extra" class="page">
+            <!-- 1. Калькулятор -->
+            <div class="card">
+                <h2>1. Калькулятор (+, -, *, /)</h2>
+                <div class="calc-box">
+                    <div class="calc-row">
+                        <input type="text" id="calc-n1" placeholder="0" readonly onclick="setCalcTarget(this)">
+                        <select id="calc-op"><option>+</option><option>-</option><option>*</option><option>/</option></select>
+                        <input type="text" id="calc-n2" placeholder="0" readonly onclick="setCalcTarget(this)">
+                    </div>
+                    <div class="calc-pad">
+                        <button onclick="calcInput(7)">7</button><button onclick="calcInput(8)">8</button><button onclick="calcInput(9)">9</button>
+                        <button onclick="calcInput(4)">4</button><button onclick="calcInput(5)">5</button><button onclick="calcInput(6)">6</button>
+                        <button onclick="calcInput(1)">1</button><button onclick="calcInput(2)">2</button><button onclick="calcInput(3)">3</button>
+                        <button onclick="calcInput(0)">0</button><button onclick="calcClear()">C</button><button onclick="calcDel()">⌫</button>
+                    </div>
+                    <button class="btn" onclick="calcResult()" style="background:#10b981">Посчитать</button>
+                    <input type="text" id="calc-result" placeholder="Ответ" readonly>
+                </div>
+            </div>
 
-        <section>
-            <h3>Изменить текст фамилии</h3>
-            <p>Текущая фамилия: <span id="surnameTarget">Аглитдинов</span></p>
-            <label>Новая фамилия: <input type="text" id="newSurname"></label>
-            <button onclick="changeSurname()">Изменить</button>
-        </section>
+            <!-- 2. Стрелочный индикатор -->
+            <div class="card">
+                <h2>2. Горизонтальный индикатор (10 делений)</h2>
+                <div class="range-box" id="range-box">
+                    <div class="range-labels"><span>0</span><span>5</span><span>10</span></div>
+                    <input type="range" id="indicator" min="0" max="10" step="1" value="0">
+                    <div style="text-align:center; margin-top:6px">Значение: <span id="range-val" class="range-val">0</span></div>
+                </div>
+                <div class="range-pad">
+                    <button onclick="rangeInput(7)">7</button><button onclick="rangeInput(8)">8</button><button onclick="rangeInput(9)">9</button>
+                    <button onclick="rangeInput(4)">4</button><button onclick="rangeInput(5)">5</button><button onclick="rangeInput(6)">6</button>
+                    <button onclick="rangeInput(1)">1</button><button onclick="rangeInput(2)">2</button><button onclick="rangeInput(3)">3</button>
+                    <button onclick="rangeInput(0)">0</button><button onclick="rangeClear()">C</button><button onclick="rangeDel()">⌫</button>
+                </div>
+                <button class="btn" onclick="applyRange()" style="width:100%; margin-top:12px; background:#8b5cf6">Применить число к индикатору</button>
+            </div>
 
-        <section>
-            <h3>Изменить цвет фона</h3>
-            <button onclick="changeBg()">🎨 Изменить фон</button>
+            <!-- 3. Генератор титульного листа -->
+            <div class="card">
+                <h2>3. Генератор титульного листа</h2>
+                <form class="calc-box" onsubmit="event.preventDefault(); generateTitle();">
+                    <input type="text" id="t-dept" placeholder="Кафедра" required>
+                    <input type="text" id="t-group" placeholder="Группа" required>
+                    <input type="text" id="t-teacher" placeholder="ФИО преподавателя" required>
+                    <input type="text" id="t-student" placeholder="ФИО студента" required>
+                    <button type="submit" class="btn" style="width:100%">📄 Сгенерировать и открыть</button>
+                </form>
+            </div>
         </section>
+    </main>
 
-        <section>
-            <h3>Анкета</h3>
-            <form onsubmit="event.preventDefault(); alert('Анкета отправлена!'); this.reset();">
-                <label>ФИО: <input type="text" required></label>
-                <label>Возраст: <input type="number" required></label>
-                <label>Пол: <input type="radio" name="gender" value="М">М <input type="radio" name="gender" value="Ж">Ж</label>
-                <label style="display:flex;align-items:center;gap:8px;margin-top:10px"><input type="checkbox" required> Согласен с условиями</label>
-                <button type="submit" style="margin-top:10px">Отправить</button>
-            </form>
-        </section>
-    </div>
+    <footer>
+        <p>&copy; <span id="year"></span> Аглитдинов Ростислав. Все права защищены.</p>
+    </footer>
+
     <script>
-        document.getElementById('profilePhoto').src += '?v=' + Math.random();
-        function showResult(t) {
-            const n1=parseFloat(document.getElementById('num1').value), n2=parseFloat(document.getElementById('num2').value), r=document.getElementById('numberResult');
-            if(isNaN(n1)||isNaN(n2)){r.textContent='⚠️ Введите числа';return}
-            if(t==='min') r.textContent=`Минимум: ${Math.min(n1,n2)}`;
-            if(t==='max') r.textContent=`Максимум: ${Math.max(n1,n2)}`;
-            if(t==='eq') r.textContent=n1===n2?'✅ Равны':'❌ Не равны';
+        // =========================================
+        // 0. НАВИГАЦИЯ ПО ВКЛАДКАМ
+        // =========================================
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.querySelector(`.nav-btn[onclick="showPage('${id}')"]`).classList.add('active');
+
+            // Запуск анимаций при открытии вкладки Резюме
+            if(id === 'resume') {
+                document.querySelectorAll('#resume .fade-in').forEach(el => {
+                    el.classList.remove('visible');
+                    setTimeout(() => el.classList.add('visible'), 50);
+                });
+            }
         }
-        function promptAge(){ const a=prompt('Возраст:'); if(a) alert(`Вам ${a} лет`); }
-        function changeSurname(){ const v=document.getElementById('newSurname').value.trim(); if(v) document.getElementById('surnameTarget').textContent=v; }
-        const colors=['#f8fafc','#fef3c7','#ecfdf5','#eff6ff','#fdf2f8','#f3f4f6']; let ci=0;
-        function changeBg(){ document.body.style.backgroundColor=colors[ci%colors.length]; ci++; }
+
+        function scrollToContact() {
+            showPage('resume');
+            setTimeout(() => {
+                document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        }
+
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // =========================================
+        // 1. ЛАБОРАТОРНАЯ ФУНКЦИИ
+        // =========================================
+        // Случайное фото (обход кэша)
+        document.getElementById('profilePhoto').src += '?v=' + Date.now();
+
+        function showResult(type) {
+            const n1 = parseFloat(document.getElementById('num1').value);
+            const n2 = parseFloat(document.getElementById('num2').value);
+            const res = document.getElementById('numberResult');
+            if (isNaN(n1) || isNaN(n2)) { res.textContent = '⚠️ Введите оба числа!'; res.style.color = 'var(--danger)'; return; }
+            res.style.color = 'var(--text-main)';
+            if (type === 'min') res.textContent = `Минимум: ${Math.min(n1, n2)}`;
+            if (type === 'max') res.textContent = `Максимум: ${Math.max(n1, n2)}`;
+            if (type === 'eq') res.textContent = n1 === n2 ? '✅ Числа равны' : '❌ Числа не равны';
+        }
+        function promptAge() { const a = prompt('Укажите ваш возраст:'); if(a) alert(`Ваш возраст: ${a} лет`); }
+        function changeSurname() { const v = document.getElementById('newSurname').value.trim(); if(v) document.getElementById('surnameTarget').textContent = v; }
+        const colors = ['#f8fafc','#fef3c7','#ecfdf5','#eff6ff','#fdf2f8','#f3f4f6']; let ci = 0;
+        function changeBg() { document.body.style.backgroundColor = colors[ci % colors.length]; ci++; }
+
+        // =========================================
+        // 2. ФОРМА РЕЗЮМЕ (ВАЛИДАЦИЯ)
+        // =========================================
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            let valid = true;
+            document.querySelectorAll('.form-group').forEach(g => g.classList.remove('error'));
+
+            const name = document.getElementById('name');
+            const email = document.getElementById('email');
+            const msg = document.getElementById('message');
+
+            if(name.value.trim().length < 2) { name.parentElement.classList.add('error'); valid = false; }
+            if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) { email.parentElement.classList.add('error'); valid = false; }
+            if(msg.value.trim().length === 0) { msg.parentElement.classList.add('error'); valid = false; }
+
+            if(valid) {
+                document.getElementById('formStatus').style.display = 'block';
+                this.reset();
+                setTimeout(() => document.getElementById('formStatus').style.display = 'none', 3000);
+            }
+        });
+
+        // =========================================
+        // 3. ДОП. ЗАДАНИЯ
+        // =========================================
+        // --- Калькулятор ---
+        let calcTarget = document.getElementById('calc-n1');
+        function setCalcTarget(el) { calcTarget = el; }
+        function calcInput(n) { calcTarget.value += n; }
+        function calcClear() { calcTarget.value = ''; document.getElementById('calc-result').value = ''; document.getElementById('calc-result').classList.remove('red-bg'); }
+        function calcDel() { calcTarget.value = calcTarget.value.slice(0, -1); }
+
+        function calcResult() {
+            const n1 = parseFloat(document.getElementById('calc-n1').value) || 0;
+            const n2 = parseFloat(document.getElementById('calc-n2').value) || 0;
+            const op = document.getElementById('calc-op').value;
+            let res;
+            switch(op) {
+                case '+': res = n1 + n2; break;
+                case '-': res = n1 - n2; break;
+                case '*': res = n1 * n2; break;
+                case '/': res = n2 !== 0 ? (n1 / n2).toFixed(2) : 'Ошибка'; break;
+            }
+            const out = document.getElementById('calc-result');
+            out.classList.remove('red-bg');
+            if (!isNaN(parseFloat(res)) && parseFloat(res) > 15) {
+                out.value = 'число>15';
+                out.classList.add('red-bg');
+            } else {
+                out.value = res;
+            }
+        }
+
+        // --- Индикатор ---
+        let rangeBuffer = '';
+        function rangeInput(n) { rangeBuffer += n; updateRange(); }
+        function rangeClear() { rangeBuffer = ''; updateRange(); }
+        function rangeDel() { rangeBuffer = rangeBuffer.slice(0, -1); updateRange(); }
+        function updateRange() { document.getElementById('range-val').textContent = rangeBuffer || '0'; }
+
+        function applyRange() {
+            let val = parseInt(rangeBuffer) || 0;
+            if (val > 10) val = 10; if (val < 0) val = 0;
+            document.getElementById('indicator').value = val;
+            document.getElementById('range-val').textContent = val;
+
+            // Логика цвета
+            const box = document.getElementById('range-box');
+            box.style.background = val > 5 ? '#fee2e2' : '#f1f5f9';
+            rangeBuffer = '';
+        }
+
+        // --- Генератор титульника ---
+        function generateTitle() {
+            const d = document.getElementById('t-dept').value;
+            const g = document.getElementById('t-group').value;
+            const t = document.getElementById('t-teacher').value;
+            const s = document.getElementById('t-student').value;
+            const y = new Date().getFullYear();
+
+            const html = `<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><style>
+                body{font-family:"Times New Roman",serif;margin:50px;line-height:1.6;text-align:center}
+                .top{font-size:14px;margin-bottom:30px} .title{font-size:26px;font-weight:bold;margin:50px 0 30px}
+                .info{text-align:right;font-size:16px;margin-top:60px;line-height:2} .year{margin-top:100px;font-size:14px}
+            </style></head><body>
+                <div class="top">МИНИСТЕРСТВО НАУКИ И ВЫСШЕГО ОБРАЗОВАНИЯ РФ<br>ФГАОУ ВО «Университет»<br>Кафедра: <b>${d}</b></div>
+                <div class="title">ОТЧЕТ<br>по лабораторной работе №3</div>
+                <div class="info">Выполнил: студент гр. ${g}<br>${s}<br>Проверил: преподаватель<br>${t}</div>
+                <div class="year">Город — ${y} г.</div>
+            </body></html>`;
+
+            const blob = new Blob([html], {type: 'text/html'});
+            window.open(URL.createObjectURL(blob), '_blank');
+        }
     </script>
 </body>
 </html>
