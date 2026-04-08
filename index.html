@@ -1,244 +1,98 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Лабараторная №3</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабараторная №3</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            color: #333;
-            padding: 20px;
-        }
-        .container {
-            max-width: 800px;
-            margin: auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .header img {
-            border-radius: 50%;
-            width: 100px;
-            height: 100px;
-        }
-        h1 {
-            margin: 10px 0;
-            font-size: 24px;
-        }
-        h2 {
-            font-size: 20px;
-            margin: 20px 0 10px;
-        }
-        .button {
-            display: inline-block;
-            padding: 10px 20px;
-            margin: 10px 0;
-            background: #007bff;
-            color: #fff;
-            text-align: center;
-            cursor: pointer;
-            border-radius: 5px;
-            text-decoration: none;
-        }
-        .button:hover {
-            background: #0056b3;
-        }
-        .input-group {
-            margin-bottom: 15px;
-        }
-        .input-group label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        .input-group input, .input-group select {
-            width: 98%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        .input-group input:focus {
-            border-color: #007bff;
-            outline: none;
-        }
-        .result {
-            margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background: #e9ecef;
-        }
-
-       {
-            background: url('video.png');
-            background-size: cover;
-        }
-    
-        .bgvideo {
-            margin: 0 50px 0 50px;
-          position: fixed;
-          right: 0;
-          bottom: 0;
-          min-width: 95%;
-          max-width: 95%;
-          min-height: 100%;
-          width: auto;
-          height: auto;
-          z-index: -99;
-        }
+        :root { --primary: #3b82f6; --bg: #f8fafc; --card: #fff; }
+        body { font-family: system-ui, sans-serif; background: var(--bg); color: #0f172a; line-height: 1.6; margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .nav { margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .nav a { color: var(--primary); text-decoration: none; font-weight: 600; padding: 8px 16px; background: var(--card); border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+        .nav a:hover { background: var(--primary); color: #fff; }
+        section { background: var(--card); padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        input, button { padding: 10px; margin: 6px 0; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; }
+        button { background: var(--primary); color: #fff; cursor: pointer; border: none; font-weight: 500; }
+        button:hover { opacity: 0.9; }
+        #surnameTarget { font-weight: bold; color: var(--primary); }
     </style>
-	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-	
-	<div class="container">
-        <div class="header">
-            <img src="profile.png" alt="Фото">
-            <h1>Аглитдинов Ростислав</h1>
-        </div>
+    <div class="container">
+        <!-- Навигация -->
+        <nav class="nav">
+            <span>🏠 Лабораторная №3</span>
+            <!-- 🔗 Ссылка на страницу резюме -->
+            <a href="resume.html">📄 Открыть резюме</a>
+        </nav>
 
-        <h2>Работа с числами</h2>
-        <div class="input-group">
-            <label for="number1">Число 1:</label>
-            <input type="number" id="number1" placeholder="Введите число">
-        </div>
-        <div class="input-group">
-            <label for="number2">Число 2:</label>
-            <input type="number" id="number2" placeholder="Введите число">
-        </div>
-        <button class="button" onclick="findMin()">Найти минимум</button>
-        <button class="button" onclick="findMax()">Найти максимум</button>
-        <button class="button" onclick="checkEqual()">Проверить равенство</button>
-        <div class="result" id="result1"></div>
+        <h1>Аглитдинов Ростислав</h1>
+        <img src="https://via.placeholder.com/150" alt="Фото профиля" style="border-radius: 12px; margin-bottom: 20px;">
 
-        <h2>Админ</h2>
-        <button class="button" onclick="showAdminName()">Показать имя admin</button>
-        <div class="result" id="result2"></div>
+        <section>
+            <h3>Работа с числами</h3>
+            <label>Число 1: <input type="number" id="num1"></label><br>
+            <label>Число 2: <input type="number" id="num2"></label><br>
+            <button onclick="showResult('min')">Найти минимум</button>
+            <button onclick="showResult('max')">Найти максимум</button>
+            <button onclick="showResult('eq')">Проверить равенство</button>
+            <p id="numberResult" style="margin-top: 10px; font-weight: 500;"></p>
+        </section>
 
-        <h2>Подтвердите возраст</h2>
-        <button class="button" onclick="askAge()">Указать возраст</button>
-        <div class="result" id="result3"></div>
+        <section>
+            <h3>Админ</h3>
+            <button onclick="alert('Имя пользователя: admin')">Показать имя admin</button>
+        </section>
 
-        <h2>Изменить текст фамилии</h2>
-        <div class="input-group">
-            <label for="surname">Новая фамилия:</label>
-            <input type="text" id="surname" placeholder="Введите фамилию">
-        </div>
-        <button class="button" onclick="changeSurname()">Изменить фамилию</button>
+        <section>
+            <h3>Подтвердите возраст</h3>
+            <button onclick="promptAge()">Указать возраст</button>
+        </section>
 
-        <h2>Изменить цвет фона</h2>
-        <button class="button" onclick="changeBackgroundColor()">Изменить цвет фона</button>
+        <section>
+            <h3>Изменить текст фамилии</h3>
+            <p>Текущая фамилия: <span id="surnameTarget">Аглитдинов</span></p>
+            <label>Новая фамилия: <input type="text" id="newSurname"></label>
+            <button onclick="changeSurname()">Изменить фамилию</button>
+        </section>
 
-        <h2>Анкета</h2>
-        <div class="input-group">
-            <label for="fullName">ФИО:</label>
-            <input type="text" id="fullName" placeholder="Введите ФИО" >
-        </div>
-        <div class="input-group">
-            <label for="age">Возраст:</label>
-            <input type="number" id="age" placeholder="Введите возраст">
-        </div>
-        <div class="input-group">
-            <label for="gender">Пол:</label>
-            <select id="gender">
-                <option value="М">М</option>
-                <option value="Ж">Ж</option>
-            </select>
-        </div>
-        <div class="input-group">
-            <input type="checkbox" id="terms">
-            <label for="terms">Я согласен с условиями</label>
-        </div>
-        <button class="button" onclick="submitForm()">Отправить анкету</button>
-        <div class="result" id="result4"></div>
+        <section>
+            <h3>Изменить цвет фона</h3>
+            <button onclick="changeBg()">Изменить цвет фона</button>
+        </section>
+
+        <section>
+            <h3>Анкета</h3>
+            <form onsubmit="event.preventDefault(); alert('Анкета отправлена!'); this.reset();">
+                <label>ФИО: <input type="text" required></label><br>
+                <label>Возраст: <input type="number" required></label><br>
+                <label>Пол: <input type="radio" name="gender" value="М">М <input type="radio" name="gender" value="Ж">Ж</label><br>
+                <label><input type="checkbox" required> Я согласен с условиями</label><br>
+                <button type="submit">Отправить анкету</button>
+            </form>
+        </section>
     </div>
 
     <script>
-        // Сравнение чисел
-        function findMin() {
-            const a = parseFloat(document.getElementById('number1').value);
-            const b = parseFloat(document.getElementById('number2').value);
-            const result = Math.min(a, b);
-            document.getElementById('result1').innerText = `Минимум: ${result}`;
+        // Базовый функционал для лабораторной
+        function showResult(type) {
+            const n1 = parseFloat(document.getElementById('num1').value);
+            const n2 = parseFloat(document.getElementById('num2').value);
+            const res = document.getElementById('numberResult');
+            if (isNaN(n1) || isNaN(n2)) { res.textContent = 'Введите оба числа!'; return; }
+            if (type === 'min') res.textContent = `Минимум: ${Math.min(n1, n2)}`;
+            if (type === 'max') res.textContent = `Максимум: ${Math.max(n1, n2)}`;
+            if (type === 'eq') res.textContent = n1 === n2 ? 'Числа равны' : 'Числа не равны';
         }
-
-        function findMax() {
-            const a = parseFloat(document.getElementById('number1').value);
-            const b = parseFloat(document.getElementById('number2').value);
-            const result = Math.max(a, b);
-            document.getElementById('result1').innerText = `Максимум: ${result}`;
-        }
-
-        function checkEqual() {
-            const a = parseFloat(document.getElementById('number1').value);
-            const b = parseFloat(document.getElementById('number2').value);
-            const result = (a === b) ? "Числа равны" : "Числа не равны";
-            document.getElementById('result1').innerText = result;
-        }
-
-        // 
-        function showAdminName() {
-            let name = "Ростислав";
-            let admin = name;
-            document.getElementById('result2').innerText = `admin: ${admin}`;
-        }
-
-        // Подтвердить возраст
-        function askAge() {
-            let age;
-            do {
-                age = prompt("Пожалуйста, введите ваш возраст:");
-
-                if (age === null || isNaN(age) || age <= 0) continue;
-                if (confirm("Ваш возраст - " + age + " ?")) {
-                	age = parseInt(age);
-                	document.getElementById('result3').innerText = `Ваш возраст: ${age}`;
-                if (age < 18){
-                	alert("ю ту смолл")
-                }
-                }
-                else{  alert("Вы нажали кнопку отмена")
-                break;
-}
-                
-
-            } while (isNaN(age) || age <= 0);
-
-        }
-
-        // Изменение текста фамилии
+        function promptAge() { alert('Ваш возраст: ' + prompt('Укажите ваш возраст:')); }
         function changeSurname() {
-            const surname = document.getElementById('surname').value;
-            document.querySelector('h1').innerText = `Всеволод ${surname}`;
+            const val = document.getElementById('newSurname').value.trim();
+            if (val) document.getElementById('surnameTarget').textContent = val;
         }
-
-        // Изменение цвета фона
-        function changeBackgroundColor() {
-            const randomColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-            document.body.style.backgroundColor = randomColor;
-        }
-
-        // Анкета
-        function submitForm() {
-            const fullName = document.getElementById('fullName').value;
-            const age = parseInt(document.getElementById('age').value);
-            const gender = document.getElementById('gender').value;
-            const terms = document.getElementById('terms').checked;
-            let nameRegex = /^[a-zA-Zа-яА-ЯёЁ\s]+$/;
-            if (!fullName || !nameRegex.test(fullName) ||  isNaN(age) || age <= 0 || !gender || !terms) {
-                document.getElementById('result4').innerText = 'Пожалуйста, заполните все поля корректно.';
-                return;
-            }
-
-            document.getElementById('result4').innerText = 'Анкета успешно отправлена!';
-            document.querySelector('form').reset();
-        }
+        const colors = ['#f8fafc', '#fef3c7', '#ecfdf5', '#eff6ff', '#fdf2f8'];
+        let ci = 0;
+        function changeBg() { document.body.style.backgroundColor = colors[ci++ % colors.length]; }
     </script>
 </body>
 </html>
