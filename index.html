@@ -287,8 +287,8 @@
                 <div class="edu-grid">
                     <div class="card edu-card">
                         <div class="edu-year">2022 — 2026</div>
-                        <h3>Бакалавриат, Информатика и ВТ</h3>
-                        <p>Университет ИТМО / МГТУ им. Баумана</p>
+                        <h3>Бакалавриат, Автоматизация технологических процессов и производств</h3>
+                        <p>МГТУ «СТАНКИН»</p>
                     </div>
                     <div class="card edu-card">
                         <div class="edu-year">2023</div>
@@ -373,15 +373,21 @@
 
             <!-- 3. Генератор титульного листа -->
             <div class="card">
-                <h2>3. Генератор титульного листа</h2>
-                <form class="calc-box" onsubmit="event.preventDefault(); generateTitle();">
-                    <input type="text" id="t-dept" placeholder="Кафедра" required>
-                    <input type="text" id="t-group" placeholder="Группа" required>
-                    <input type="text" id="t-teacher" placeholder="ФИО преподавателя" required>
-                    <input type="text" id="t-student" placeholder="ФИО студента" required>
-                    <button type="submit" class="btn" style="width:100%">📄 Сгенерировать и открыть</button>
-                </form>
-            </div>
+    <h2>3. Генератор титульного листа</h2>
+    <form class="calc-box" onsubmit="event.preventDefault(); generateTitle();">
+        <input type="text" id="t-university" placeholder="Университет" value="Московский государственный технологический университет «СТАНКИН»" required>
+        <input type="text" id="t-institute" placeholder="Институт" value="Институт цифровых интеллектуальных систем" required>
+        <input type="text" id="t-dept" placeholder="Кафедра" value="Кафедра компьютерных систем управления" required>
+        <input type="text" id="t-discipline" placeholder="Дисциплина" value="Основы системного программного обеспечения" required>
+        <input type="text" id="t-labnum" placeholder="№ лабораторной работы" value="1" required>
+        <input type="text" id="t-group" placeholder="Группа" value="АДБ-23-06" required>
+        <input type="text" id="t-student" placeholder="ФИО студента" value="Иванов И.И." required>
+        <input type="text" id="t-teacher" placeholder="ФИО преподавателя" value="Ковалев И.А." required>
+        <input type="text" id="t-teacherTitle" placeholder="Должность преподавателя" value="к.т.н., доцент" required>
+        <input type="text" id="t-year" placeholder="Год" value="2025" required>
+        <button type="submit" class="btn" style="width:100%">📄 Сгенерировать и открыть</button>
+    </form>
+</div>
         </section>
     </main>
 
@@ -513,26 +519,139 @@
 
         // --- Генератор титульника ---
         function generateTitle() {
-            const d = document.getElementById('t-dept').value;
-            const g = document.getElementById('t-group').value;
-            const t = document.getElementById('t-teacher').value;
-            const s = document.getElementById('t-student').value;
-            const y = new Date().getFullYear();
+    const university = document.getElementById('t-university').value;
+    const institute = document.getElementById('t-institute').value;
+    const dept = document.getElementById('t-dept').value;
+    const discipline = document.getElementById('t-discipline').value;
+    const labNum = document.getElementById('t-labnum').value;
+    const group = document.getElementById('t-group').value;
+    const student = document.getElementById('t-student').value;
+    const teacher = document.getElementById('t-teacher').value;
+    const teacherTitle = document.getElementById('t-teacherTitle').value;
+    const year = document.getElementById('t-year').value;
 
-            const html = `<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><style>
-                body{font-family:"Times New Roman",serif;margin:50px;line-height:1.6;text-align:center}
-                .top{font-size:14px;margin-bottom:30px} .title{font-size:26px;font-weight:bold;margin:50px 0 30px}
-                .info{text-align:right;font-size:16px;margin-top:60px;line-height:2} .year{margin-top:100px;font-size:14px}
-            </style></head><body>
-                <div class="top">МИНИСТЕРСТВО НАУКИ И ВЫСШЕГО ОБРАЗОВАНИЯ РФ<br>ФГАОУ ВО «Университет»<br>Кафедра: <b>${d}</b></div>
-                <div class="title">ОТЧЕТ<br>по лабораторной работе №3</div>
-                <div class="info">Выполнил: студент гр. ${g}<br>${s}<br>Проверил: преподаватель<br>${t}</div>
-                <div class="year">Город — ${y} г.</div>
-            </body></html>`;
-
-            const blob = new Blob([html], {type: 'text/html'});
-            window.open(URL.createObjectURL(blob), '_blank');
+    const html = `<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            margin: 40px 50px;
+            line-height: 1.5;
+            font-size: 14pt;
         }
+        .center { text-align: center; }
+        .right { text-align: right; }
+        .header { margin-bottom: 30px; }
+        .university { margin: 20px 0; font-size: 12pt; }
+        .institute { margin: 10px 0; font-size: 12pt; }
+        .dept { margin: 10px 0; font-size: 12pt; }
+        .title { 
+            font-size: 16pt; 
+            font-weight: bold; 
+            margin: 40px 0 30px;
+            text-align: center;
+        }
+        .discipline {
+            font-size: 14pt;
+            margin: 30px 0;
+            text-align: center;
+        }
+        .info-block {
+            margin-top: 50px;
+            line-height: 2.2;
+        }
+        .signature-line {
+            display: flex;
+            justify-content: space-between;
+            margin: 25px 0;
+            align-items: flex-end;
+        }
+        .signature-box {
+            flex: 1;
+        }
+        .date-sign {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 11pt;
+        }
+        .underline {
+            border-bottom: 1px solid black;
+            display: inline-block;
+            width: 120px;
+            margin: 0 10px;
+        }
+        .year {
+            margin-top: 60px;
+            text-align: center;
+        }
+        .contents {
+            margin-top: 80px;
+            page-break-before: always;
+        }
+        .contents h2 {
+            text-align: center;
+            font-size: 14pt;
+            margin-bottom: 30px;
+        }
+        .contents-list {
+            line-height: 2;
+        }
+        @media print {
+            body { margin: 30px 40px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header center">
+        <div style="font-size: 11pt; margin-bottom: 15px;"><b>МИНОБРНАУКИ РОССИИ</b></div>
+        <div class="university">федеральное государственное автономное образовательное учреждение<br>
+        высшего образования</div>
+        <div class="university" style="font-weight: bold;">«${university}"</div>
+        <div class="institute">| ${institute}</div>
+        <div class="dept">|${dept}</div>
+    </div>
+
+    <div class="discipline center">
+        Дисциплина «<b>${discipline}</b>»<br><br>
+        Отчет по лабораторной работе №<b>${labNum}</b>
+    </div>
+
+    <div class="info-block">
+        <div class="signature-line">
+            <div class="signature-box">
+                <div>Выполнил студент гр. <b>${group}</b>:</div>
+                <div class="date-sign">
+                    <span><span class="underline"></span>(дата)</span>
+                    <span><span class="underline"></span>(подпись)</span>
+                </div>
+                <div style="margin-top: 5px;"><b>${student}</b></div>
+            </div>
+        </div>
+
+        <div class="signature-line" style="margin-top: 40px;">
+            <div class="signature-box">
+                <div>Проверил ${teacherTitle}</div>
+                <div class="date-sign">
+                    <span><span class="underline"></span>(дата)</span>
+                    <span><span class="underline"></span>(подпись)</span>
+                </div>
+                <div style="margin-top: 5px;"><b>${teacher}</b></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="year">
+        Москва &nbsp;&nbsp;&nbsp; ${year} &nbsp;г.
+    </div>
+</body>
+</html>`;
+
+    const blob = new Blob([html], {type: 'text/html'});
+    window.open(URL.createObjectURL(blob), '_blank');
+}
     </script>
 </body>
 </html>
